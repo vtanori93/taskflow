@@ -1,0 +1,251 @@
+basePath: /
+definitions:
+  main.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  main.Item:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API para gestión de items
+  title: TaskFlow API
+  version: "1.0"
+paths:
+  /health:
+    get:
+      description: Retorna el estado del servicio
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Verificar estado del servicio
+      tags:
+      - health
+  /items:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene todos los items (GET) o crea uno nuevo (POST)
+      parameters:
+      - description: Item a crear
+        in: body
+        name: item
+        schema:
+          properties:
+            name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/main.Item'
+                  type: array
+              type: object
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.Item'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Listar o crear items
+      tags:
+      - items
+    post:
+      consumes:
+      - application/json
+      description: Obtiene todos los items (GET) o crea uno nuevo (POST)
+      parameters:
+      - description: Item a crear
+        in: body
+        name: item
+        schema:
+          properties:
+            name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/main.Item'
+                  type: array
+              type: object
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.Item'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Listar o crear items
+      tags:
+      - items
+  /items/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Obtiene (GET), actualiza (PUT) o elimina (DELETE) un item por ID
+      parameters:
+      - description: ID del item
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Item actualizado
+        in: body
+        name: item
+        schema:
+          properties:
+            name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.Item'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Operaciones sobre un item específico
+      tags:
+      - items
+    get:
+      consumes:
+      - application/json
+      description: Obtiene (GET), actualiza (PUT) o elimina (DELETE) un item por ID
+      parameters:
+      - description: ID del item
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Item actualizado
+        in: body
+        name: item
+        schema:
+          properties:
+            name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.Item'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Operaciones sobre un item específico
+      tags:
+      - items
+    put:
+      consumes:
+      - application/json
+      description: Obtiene (GET), actualiza (PUT) o elimina (DELETE) un item por ID
+      parameters:
+      - description: ID del item
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Item actualizado
+        in: body
+        name: item
+        schema:
+          properties:
+            name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.Item'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Operaciones sobre un item específico
+      tags:
+      - items
+swagger: "2.0"
