@@ -8,3 +8,14 @@ export enum Routes {
   Profile = 'Profile',
   TaskDetail = 'TaskDetail',
 }
+
+// Centralized route array for easier navigation and menu generation
+export const ROUTE_LIST = [
+  Routes.Splash,
+  Routes.Login,
+  Routes.Register,
+  Routes.Main,
+  Routes.Home,
+  Routes.Profile,
+  Routes.TaskDetail,
+];
