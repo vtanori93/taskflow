@@ -1,99 +1,207 @@
 basePath: /
 definitions:
-  main.APIResponse:
+  models.APIResponse:
     properties:
       data: {}
+      error:
+        type: boolean
       message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  models.AssignTaskRequest:
+    properties:
+      assigned_to:
+        type: string
+    type: object
+  models.CreateTaskRequest:
+    properties:
+      description:
+        maxLength: 500
+        type: string
+      due_date:
+        description: Fecha como string plano
+        type: string
+      priority:
+        enum:
+        - low
+        - medium
+        - high
+        - urgent
+        type: string
+      title:
+        maxLength: 100
+        type: string
+    required:
+    - priority
+    - title
+    type: object
+  models.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
+  models.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  models.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  models.Task:
+    properties:
+      assigned_to:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      description:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: string
+      priority:
         type: string
       status:
         type: string
+      title:
+        type: string
+      updated_at:
+        type: string
     type: object
-  main.Item:
+  models.TaskStats:
     properties:
-      createdAt:
+      cancelled_count:
+        type: integer
+      completed_count:
+        type: integer
+      high_priority_count:
+        type: integer
+      in_progress_count:
+        type: integer
+      overdue_count:
+        type: integer
+      pending_count:
+        type: integer
+      total_tasks:
+        type: integer
+    type: object
+  models.TasksListResponse:
+    properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+      tasks:
+        items:
+          $ref: '#/definitions/models.Task'
+        type: array
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  models.UpdateTaskRequest:
+    properties:
+      description:
+        maxLength: 500
+        type: string
+      due_date:
+        description: Fecha como string plano
+        type: string
+      priority:
+        enum:
+        - low
+        - medium
+        - high
+        - urgent
+        type: string
+      title:
+        maxLength: 100
+        type: string
+    type: object
+  models.UpdateTaskStatusRequest:
+    properties:
+      status:
+        enum:
+        - pending
+        - in_progress
+        - completed
+        - cancelled
+        type: string
+    required:
+    - status
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      email:
         type: string
       id:
-        type: integer
+        type: string
       name:
+        type: string
+      updated_at:
         type: string
     type: object
 host: localhost:8080
 info:
-  contact: {}
-  description: API para gestión de items
+  contact:
+    email: support@taskflow.local
+    name: API Support
+  description: API REST para gestión de tareas colaborativas
+  license:
+    name: MIT
+  termsOfService: http://swagger.io/terms/
   title: TaskFlow API
   version: "1.0"
 paths:
-  /health:
-    get:
-      description: Retorna el estado del servicio
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Verificar estado del servicio
-      tags:
-      - health
-  /items:
-    get:
-      consumes:
-      - application/json
-      description: Obtiene todos los items (GET) o crea uno nuevo (POST)
-      parameters:
-      - description: Item a crear
-        in: body
-        name: item
-        schema:
-          properties:
-            name:
-              type: string
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/main.APIResponse'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/main.Item'
-                  type: array
-              type: object
-        "201":
-          description: Created
-          schema:
-            allOf:
-            - $ref: '#/definitions/main.APIResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/main.Item'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Listar o crear items
-      tags:
-      - items
+  /api/v1/auth/login:
     post:
       consumes:
       - application/json
-      description: Obtiene todos los items (GET) o crea uno nuevo (POST)
+      description: Autentica a un usuario y retorna tokens JWT
       parameters:
-      - description: Item a crear
+      - description: Credenciales
         in: body
-        name: item
+        name: request
+        required: true
         schema:
-          properties:
-            name:
-              type: string
-          type: object
+          $ref: '#/definitions/models.LoginRequest'
       produces:
       - application/json
       responses:
@@ -101,89 +209,140 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/main.APIResponse'
+            - $ref: '#/definitions/models.APIResponse'
             - properties:
                 data:
-                  items:
-                    $ref: '#/definitions/main.Item'
-                  type: array
+                  $ref: '#/definitions/models.LoginResponse'
               type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Login de usuario
+      tags:
+      - Auth
+  /api/v1/auth/profile:
+    get:
+      description: Obtiene la información del usuario autenticado
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Obtener perfil del usuario actual
+      tags:
+      - Auth
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Genera un nuevo access token usando un refresh token válido
+      parameters:
+      - description: Refresh token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.LoginResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Refrescar token de acceso
+      tags:
+      - Auth
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Registra un nuevo usuario en el sistema
+      parameters:
+      - description: Datos de registro
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      produces:
+      - application/json
+      responses:
         "201":
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/main.APIResponse'
+            - $ref: '#/definitions/models.APIResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/main.Item'
+                  $ref: '#/definitions/models.User'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Listar o crear items
+            $ref: '#/definitions/models.APIResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Registrar nuevo usuario
       tags:
-      - items
-  /items/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Obtiene (GET), actualiza (PUT) o elimina (DELETE) un item por ID
-      parameters:
-      - description: ID del item
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Item actualizado
-        in: body
-        name: item
-        schema:
-          properties:
-            name:
-              type: string
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/main.APIResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/main.Item'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/main.APIResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Operaciones sobre un item específico
-      tags:
-      - items
+      - Auth
+  /api/v1/tasks:
     get:
-      consumes:
-      - application/json
-      description: Obtiene (GET), actualiza (PUT) o elimina (DELETE) un item por ID
+      description: Obtiene todas las tareas del sistema con paginación (sin filtro
+        por usuario)
       parameters:
-      - description: ID del item
-        in: path
-        name: id
-        required: true
+      - default: 1
+        description: Número de página
+        in: query
+        name: page
         type: integer
-      - description: Item actualizado
-        in: body
-        name: item
-        schema:
-          properties:
-            name:
-              type: string
-          type: object
+      - default: 20
+        description: Tamaño de página
+        in: query
+        name: page_size
+        type: integer
+      - description: Filtrar por estado
+        enum:
+        - pending
+        - in_progress
+        - completed
+        - cancelled
+        in: query
+        name: status
+        type: string
       produces:
       - application/json
       responses:
@@ -191,40 +350,134 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/main.APIResponse'
+            - $ref: '#/definitions/models.APIResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/main.Item'
+                  $ref: '#/definitions/models.TasksListResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Listar todas las tareas
+      tags:
+      - Tasks
+    post:
+      consumes:
+      - application/json
+      description: Crea una nueva tarea para el usuario autenticado
+      parameters:
+      - description: Datos de la tarea
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Task'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Crear nueva tarea
+      tags:
+      - Tasks
+  /api/v1/tasks/{id}:
+    delete:
+      description: Elimina una tarea del sistema
+      parameters:
+      - description: ID de la tarea
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Operaciones sobre un item específico
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Eliminar tarea
       tags:
-      - items
+      - Tasks
+    get:
+      description: Obtiene los detalles de una tarea específica
+      parameters:
+      - description: ID de la tarea
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Task'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Obtener tarea por ID
+      tags:
+      - Tasks
     put:
       consumes:
       - application/json
-      description: Obtiene (GET), actualiza (PUT) o elimina (DELETE) un item por ID
+      description: Actualiza los detalles de una tarea
       parameters:
-      - description: ID del item
+      - description: ID de la tarea
         in: path
         name: id
         required: true
-        type: integer
-      - description: Item actualizado
+        type: string
+      - description: Datos a actualizar
         in: body
-        name: item
+        name: request
+        required: true
         schema:
-          properties:
-            name:
-              type: string
-          type: object
+          $ref: '#/definitions/models.UpdateTaskRequest'
       produces:
       - application/json
       responses:
@@ -232,20 +485,226 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/main.APIResponse'
+            - $ref: '#/definitions/models.APIResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/main.Item'
+                  $ref: '#/definitions/models.Task'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Operaciones sobre un item específico
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Actualizar tarea
       tags:
-      - items
+      - Tasks
+  /api/v1/tasks/{id}/assign:
+    post:
+      consumes:
+      - application/json
+      description: Asigna una tarea a un usuario específico
+      parameters:
+      - description: ID de la tarea
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Usuario a asignar
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.AssignTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Task'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Asignar tarea a usuario
+      tags:
+      - Tasks
+  /api/v1/tasks/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Cambia el estado de una tarea
+      parameters:
+      - description: ID de la tarea
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Nuevo estado
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTaskStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Task'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Actualizar estado de tarea
+      tags:
+      - Tasks
+  /api/v1/tasks/my:
+    get:
+      description: Obtiene las tareas creadas por o asignadas al usuario autenticado
+        con paginación
+      parameters:
+      - default: 1
+        description: Número de página
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Tamaño de página
+        in: query
+        name: page_size
+        type: integer
+      - description: Filtrar por estado
+        enum:
+        - pending
+        - in_progress
+        - completed
+        - cancelled
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.TasksListResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Listar mis tareas
+      tags:
+      - Tasks
+  /api/v1/tasks/stats:
+    get:
+      description: Obtiene estadísticas de tareas del usuario autenticado
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.TaskStats'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Obtener estadísticas de tareas
+      tags:
+      - Tasks
+  /api/v1/users:
+    get:
+      description: Obtiene el listado de todos los usuarios registrados en el sistema
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.User'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      security:
+      - Bearer: []
+      summary: Listar todos los usuarios
+      tags:
+      - Users
+schemes:
+- http
+- https
+securityDefinitions:
+  Bearer:
+    description: JWT Token en formato "Bearer {token}"
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
