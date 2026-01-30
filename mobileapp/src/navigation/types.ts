@@ -7,6 +7,6 @@ export type RootStackParamList = {
   [Routes.Main]: undefined;
   [Routes.Home]: undefined;
   [Routes.Profile]: undefined;
-  [Routes.TaskDetail]: { id?: string } | undefined;
+  [Routes.TaskDetail]: { taskId?: string } | undefined;
   [Routes.AddTask]: undefined;
 };

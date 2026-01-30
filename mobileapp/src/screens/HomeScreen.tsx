@@ -46,7 +46,14 @@ export default function HomeScreen() {
         data={tasks}
         keyExtractor={(item) => item.id?.toString()}
         renderItem={({ item }) => (
-          <Box borderWidth={1} borderColor="#ccc" borderRadius={8} p={4} mb={3}>
+          <Box
+            borderWidth={1}
+            borderColor="#ccc"
+            borderRadius={8}
+            p={4}
+            mb={3}
+            onTouchEnd={() => navigation.navigate(Routes.TaskDetail, { taskId: item.id })}
+          >
             <VStack space={1}>
               <Text fontWeight="bold">{item.title}</Text>
               <Text>{item.description}</Text>

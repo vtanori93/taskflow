@@ -26,4 +26,8 @@ export class TaskService {
     await api.delete(`/tasks/${id}`);
     return true;
   }
+  async assignTask(id: string, assigned_to: string) {
+    const response = await api.post(`/tasks/${id}/assign`, { assigned_to });
+    return response.data.data;
+  }
 }
