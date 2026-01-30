@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { Box, Button, Progress, ScrollView, Spinner, Text, VStack } from 'native-base';
+import { Box, Button, ScrollView, Spinner, Text, VStack } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { Routes } from '../navigation/routes';
@@ -57,30 +57,12 @@ export default function ProfileScreen() {
                 {stats && (
                     <VStack w="100%" space={4} mt={4}>
                         <Text fontWeight="bold">Estadísticas de tareas</Text>
-                        <VStack space={2}>
-                            <Text>Pendientes ({stats.pending_count})</Text>
-                            <Progress value={stats.pending_count} max={stats.total_tasks || 1} />
-                        </VStack>
-                        <VStack space={2}>
-                            <Text>En progreso ({stats.in_progress_count})</Text>
-                            <Progress value={stats.in_progress_count} max={stats.total_tasks || 1} colorScheme="info" />
-                        </VStack>
-                        <VStack space={2}>
-                            <Text>Completadas ({stats.completed_count})</Text>
-                            <Progress value={stats.completed_count} max={stats.total_tasks || 1} colorScheme="success" />
-                        </VStack>
-                        <VStack space={2}>
-                            <Text>Canceladas ({stats.cancelled_count})</Text>
-                            <Progress value={stats.cancelled_count} max={stats.total_tasks || 1} colorScheme="danger" />
-                        </VStack>
-                        <VStack space={2}>
-                            <Text>Alta prioridad ({stats.high_priority_count})</Text>
-                            <Progress value={stats.high_priority_count} max={stats.total_tasks || 1} colorScheme="warning" />
-                        </VStack>
-                        <VStack space={2}>
-                            <Text>Vencidas ({stats.overdue_count})</Text>
-                            <Progress value={stats.overdue_count} max={stats.total_tasks || 1} colorScheme="rose" />
-                        </VStack>
+                        <Text>Pendientes: {stats.pending_count}</Text>
+                        <Text>En progreso: {stats.in_progress_count}</Text>
+                        <Text>Completadas: {stats.completed_count}</Text>
+                        <Text>Canceladas: {stats.cancelled_count}</Text>
+                        <Text>Alta prioridad: {stats.high_priority_count}</Text>
+                        <Text>Vencidas: {stats.overdue_count}</Text>
                         <Text mt={2}>Total tareas: {stats.total_tasks}</Text>
                     </VStack>
                 )}
