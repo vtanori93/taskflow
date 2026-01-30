@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Box, Button, Input, KeyboardAvoidingView, ScrollView, Spinner, Text, VStack } from 'native-base';
 import React, { useState } from 'react';
-import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native';
+import { Platform } from 'react-native';
 import { useAuthViewModel } from '../viewmodels/AuthViewModel';
 
 export default function LoginScreen() {
@@ -20,26 +21,40 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
-      <Text style={{ fontSize: 24, marginBottom: 16 }}>Login</Text>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        style={{ borderWidth: 1, borderColor: '#ccc', width: '100%', marginBottom: 12, padding: 8, borderRadius: 6 }}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={{ borderWidth: 1, borderColor: '#ccc', width: '100%', marginBottom: 12, padding: 8, borderRadius: 6 }}
-      />
-      {error && <Text style={{ color: 'red', marginBottom: 8 }}>{error}</Text>}
-      {loading ? <ActivityIndicator /> : <Button title="Iniciar sesión" onPress={handleLogin} />}
-      {success && <Text style={{ color: 'green', marginTop: 12 }}>¡Login exitoso!</Text>}
-    </View>
+    <KeyboardAvoidingView
+      flex={1}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={60}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+        <Box flex={1} justifyContent="center" alignItems="center" p={4} bg="#fff">
+          <VStack space={4} width="100%" maxW="300px">
+            <Text fontSize="2xl" mb={2} textAlign="center">Login</Text>
+            <Input
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              returnKeyType="next"
+            />
+            <Input
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              type="password"
+              returnKeyType="done"
+            />
+            {error && <Text color="red.500" textAlign="center">{error}</Text>}
+            {loading ? (
+              <Spinner accessibilityLabel="Cargando" />
+            ) : (
+              <Button onPress={handleLogin} colorScheme="primary">Iniciar sesión</Button>
+            )}
+            {success && <Text color="green.500" textAlign="center">¡Login exitoso!</Text>}
+          </VStack>
+        </Box>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
