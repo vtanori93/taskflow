@@ -22,11 +22,15 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      flex={1}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={60}
+      style={{ flex: 1 }}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <Box flex={1} justifyContent="center" alignItems="center" p={4} bg="#fff">
           <VStack space={4} width="100%" maxW="100%">
             <Input
@@ -36,7 +40,7 @@ export default function LoginScreen() {
               autoCapitalize="none"
               keyboardType="email-address"
               returnKeyType="next"
-               fontSize={16}
+              fontSize={16}
             />
             <Input
               placeholder="Password"
@@ -53,6 +57,7 @@ export default function LoginScreen() {
               <Button onPress={handleLogin} colorScheme="primary">Iniciar sesión</Button>
             )}
             {success && <Text color="green.500" textAlign="center">¡Login exitoso!</Text>}
+            <Button variant="outline" mt={2} onPress={() => navigation.navigate('Register')}>Registrarse</Button>
           </VStack>
         </Box>
       </ScrollView>

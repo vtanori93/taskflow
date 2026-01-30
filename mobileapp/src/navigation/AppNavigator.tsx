@@ -45,7 +45,7 @@ export default function AppNavigator() {
       <Stack.Navigator initialRouteName={Routes.Splash} screenOptions={{ headerShown: false }}>
         <Stack.Screen name={Routes.Splash} component={SplashScreen} />
         <Stack.Screen name={Routes.Login} component={LoginScreen} />
-        <Stack.Screen name={Routes.Register} component={RegisterScreen} />
+        <Stack.Screen name={Routes.Register} component={RegisterScreen} options={{ headerShown: true, title: 'Registro' }} />
         <Stack.Screen name={Routes.Main} component={MainTabs} />
         <Stack.Screen name={Routes.TaskDetail} component={TaskDetailScreen} />
         <Stack.Screen name={Routes.AddTask} component={AddTaskScreen} options={{ headerShown: true, title: 'Agregar Tarea' }} />

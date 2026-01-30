@@ -13,9 +13,13 @@ export class AuthService {
     }
   }
 
-  async register(email: string, password: string) {
-    // Implementar registro real si es necesario
-    return { token: 'dummy-token', user: { id: 2, email } };
+  async register(email: string, name: string, password: string) {
+    try {
+      const response = await api.post('/auth/register', { email, name, password });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Error en registro');
+    }
   }
 
   async logout() {
