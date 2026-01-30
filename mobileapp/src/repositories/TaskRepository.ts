@@ -3,8 +3,8 @@ import { TaskService } from '../services/TaskService';
 export class TaskRepository {
   private service = new TaskService();
 
-  getTasks() {
-    return this.service.getTasks();
+  getTasks(params?: { page?: number; page_size?: number }) {
+    return this.service.getTasks(params);
   }
 
   getTaskById(id: number) {

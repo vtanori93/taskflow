@@ -1,25 +1,29 @@
-// Dummy TaskService
+import api from './api';
+
 export class TaskService {
-  async getTasks() {
-    return [
-      { id: 1, title: 'Tarea 1', status: 'pending', priority: 'high' },
-      { id: 2, title: 'Tarea 2', status: 'completed', priority: 'low' },
-    ];
+  async getTasks(params?: { page?: number; page_size?: number }) {
+    const response = await api.get('/tasks', { params });
+    // El backend responde con { data: { tasks: [...] } }
+    return response.data.data.tasks;
   }
 
-  async getTaskById(id: number) {
-    return { id, title: `Tarea ${id}`, status: 'pending', priority: 'medium' };
+  async getTaskById(id: string) {
+    const response = await api.get(`/tasks/${id}`);
+    return response.data.data;
   }
 
   async createTask(task: any) {
-    return { ...task, id: Math.random() };
+    const response = await api.post('/tasks', task);
+    return response.data.data;
   }
 
   async updateTask(task: any) {
-    return task;
+    const response = await api.put(`/tasks/${task.id}`, task);
+    return response.data.data;
   }
 
-  async deleteTask(id: number) {
+  async deleteTask(id: string) {
+    await api.delete(`/tasks/${id}`);
     return true;
   }
 }
