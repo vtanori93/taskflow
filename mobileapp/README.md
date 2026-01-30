@@ -1,43 +1,70 @@
-# Welcome to your Expo app 👋
+# TaskFlow Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+TaskFlow es una aplicación móvil desarrollada con React Native y Expo para la gestión de tareas personales. Permite a los usuarios crear, visualizar, editar y eliminar tareas, así como gestionar su autenticación y perfil.
 
-## Get started
+## Características principales
+- Registro e inicio de sesión de usuarios
+- Creación, edición y eliminación de tareas
+- Visualización de detalles de tareas
+- Pantalla de inicio y perfil de usuario
+- Navegación entre pantallas
+- Manejo de sesiones y autenticación
 
-1. Install dependencies
+## Estructura del proyecto
+```
+app/                # Componentes principales y layout de la app
+assets/             # Recursos estáticos (imágenes, fuentes)
+src/
+  handlers/         # Lógica de manejo de autenticación y tareas
+  navigation/       # Navegación y rutas de la app
+  repositories/     # Acceso a datos y lógica de repositorios
+  screens/          # Pantallas principales de la app
+  services/         # Servicios de API y lógica de negocio
+  stores/           # (Opcional) Gestión de estado
+  viewmodels/       # Lógica de presentación (MVVM)
+```
 
+## Instalación
+1. Clona el repositorio:
+   ```bash
+   git clone <url-del-repositorio>
+   ```
+2. Instala las dependencias:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+3. Inicia el proyecto con Expo:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Scripts útiles
+- `npm start` – Inicia el servidor de desarrollo de Expo
+- `npm run android` – Ejecuta la app en un emulador/dispositivo Android
+- `npm run ios` – Ejecuta la app en un emulador/dispositivo iOS (solo MacOS)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Tecnologías utilizadas
+- React Native
+- Expo
+- TypeScript
+- Context API / MVVM
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Estructura de carpetas clave
+- **app/**: Layout y punto de entrada de la app
+- **src/screens/**: Pantallas principales (Login, Home, Perfil, etc.)
+- **src/handlers/**: Lógica de manejo de autenticación y tareas
+- **src/services/**: Servicios de API y lógica de negocio
+- **src/navigation/**: Configuración de navegación y rutas
 
-## Get a fresh project
+## Contribución
+1. Haz un fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-feature`)
+3. Realiza tus cambios y haz commit (`git commit -am 'Agrega nueva feature'`)
+4. Haz push a tu rama (`git push origin feature/nueva-feature`)
+5. Abre un Pull Request
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
+## Licencia
+Este proyecto está bajo la licencia MIT.
 
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
