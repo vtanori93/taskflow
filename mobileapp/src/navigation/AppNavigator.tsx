@@ -5,6 +5,7 @@ import React from 'react';
 
 
 import { Ionicons } from '@expo/vector-icons';
+import AddTaskScreen from '../screens/AddTaskScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -47,6 +48,7 @@ export default function AppNavigator() {
         <Stack.Screen name={Routes.Register} component={RegisterScreen} />
         <Stack.Screen name={Routes.Main} component={MainTabs} />
         <Stack.Screen name={Routes.TaskDetail} component={TaskDetailScreen} />
+        <Stack.Screen name={Routes.AddTask} component={AddTaskScreen} options={{ headerShown: true, title: 'Agregar Tarea' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

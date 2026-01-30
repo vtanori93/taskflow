@@ -8,4 +8,5 @@ export type RootStackParamList = {
   [Routes.Home]: undefined;
   [Routes.Profile]: undefined;
   [Routes.TaskDetail]: { id?: string } | undefined;
+  [Routes.AddTask]: undefined;
 };

@@ -7,6 +7,7 @@ export enum Routes {
   Home = 'Home',
   Profile = 'Profile',
   TaskDetail = 'TaskDetail',
+  AddTask = 'AddTask',
 }
 
 // Centralized route array for easier navigation and menu generation
@@ -18,4 +19,5 @@ export const ROUTE_LIST = [
   Routes.Home,
   Routes.Profile,
   Routes.TaskDetail,
+  Routes.AddTask,
 ];

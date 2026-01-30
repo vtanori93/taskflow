@@ -28,8 +28,7 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
         <Box flex={1} justifyContent="center" alignItems="center" p={4} bg="#fff">
-          <VStack space={4} width="100%" maxW="300px">
-            <Text fontSize="2xl" mb={2} textAlign="center">Login</Text>
+          <VStack space={4} width="100%" maxW="100%">
             <Input
               placeholder="Email"
               value={email}
@@ -37,12 +36,14 @@ export default function LoginScreen() {
               autoCapitalize="none"
               keyboardType="email-address"
               returnKeyType="next"
+               fontSize={16}
             />
             <Input
               placeholder="Password"
               value={password}
               onChangeText={setPassword}
               type="password"
+              fontSize={16}
               returnKeyType="done"
             />
             {error && <Text color="red.500" textAlign="center">{error}</Text>}

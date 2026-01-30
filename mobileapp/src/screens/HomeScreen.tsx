@@ -1,13 +1,23 @@
-import { Box, FlatList, Spinner, Text, VStack } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+import { Box, Button, FlatList, Spinner, Text, VStack } from 'native-base';
 import React, { useEffect } from 'react';
+import { Routes } from '../navigation/routes';
 import { useTaskViewModel } from '../viewmodels/TaskViewModel';
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const { tasks, loading, error, fetchTasks } = useTaskViewModel();
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await fetchTasks();
+    setRefreshing(false);
+  }, [fetchTasks]);
 
   useEffect(() => {
     // page_size grande para traer todas las tareas (ajusta según tu backend)
-    fetchTasks({ page: 1, page_size: 100 });
+    fetchTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -29,7 +39,9 @@ export default function HomeScreen() {
 
   return (
     <Box flex={1} p={4} bg="#fff">
-      <Text fontSize="2xl" mb={4} textAlign="center">Tareas</Text>
+      <Button mb={4} onPress={() => navigation.navigate(Routes.AddTask)} colorScheme="primary">
+        Agregar Tarea
+      </Button>
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id?.toString()}
@@ -45,6 +57,8 @@ export default function HomeScreen() {
           </Box>
         )}
         ListEmptyComponent={<Text textAlign="center">No hay tareas.</Text>}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
       />
     </Box>
   );
